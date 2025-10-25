@@ -1,8 +1,15 @@
 import os
-from telegram.ext import CommandHandler
+# ApplicationBuilder এবং CommandHandler দরকার
+from telegram.ext import CommandHandler, ApplicationBuilder 
+
+# Webhook এর জন্য দরকারি Render URL এবং Port। আপনার Render লিঙ্ক এখানে
+WEB_URL = "https://ffguildbot.onrender.com/" 
+# Render পোর্টটি 8080 সেট করা হয়েছে 
+PORT = int(os.environ.get('PORT', '8080')) 
 
 # এটি আপনার BotFather টোকেন Render থেকে নেবে
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
+
 
 def start(update, context):
     update.message.reply_text('স্বাগতম! আমি আপনার গিল্ড বুস্টার বট। /ff_group 5 লিখে চেষ্টা করুন।')
@@ -25,7 +32,6 @@ def ff_group(update, context):
 
 
 def main():
-    from telegram.ext import ApplicationBuilder # নতুন লাইব্রেরি যোগ
     
     # নতুন এবং আধুনিক পদ্ধতি ব্যবহার করে বট শুরু করা
     application = ApplicationBuilder().token(BOT_TOKEN).build()
@@ -34,9 +40,16 @@ def main():
     application.add_handler(CommandHandler("start", start))
     application.add_handler(CommandHandler("ff_group", ff_group))
 
-    # বট চালানো
-    application.run_polling()
-    # application.idle() # idle() ফাংশনটি নতুন পদ্ধতিতে প্রয়োজন নেই
+    # ***********************************
+    # Webhook সেটআপ (অনলাইন সার্ভারের জন্য)
+    # ***********************************
+    # Webhook ব্যবহার করার জন্য Polling কোডটি বাদ দেওয়া হয়েছে
+    application.run_webhook(
+        listen="0.0.0.0",
+        port=PORT,
+        url_path=BOT_TOKEN,
+        webhook_url=WEB_URL + BOT_TOKEN
+    )
     
 if __name__ == '__main__':
     main()
