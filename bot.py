@@ -25,7 +25,8 @@ def ff_group(update, context):
 
 
 def main():
-    updater = Updater(BOT_TOKEN, use_context=True)
+    # এখানে পরিবর্তন করা হয়েছে
+    updater = Updater(BOT_TOKEN)
     dp = updater.dispatcher
 
     # কমান্ড যুক্ত করা
