@@ -1,5 +1,5 @@
 import os
-from telegram.ext import Updater, CommandHandler
+from telegram.ext import CommandHandler
 
 # এটি আপনার BotFather টোকেন Render থেকে নেবে
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
@@ -25,17 +25,18 @@ def ff_group(update, context):
 
 
 def main():
-    # এখানে পরিবর্তন করা হয়েছে
-    updater = Updater(BOT_TOKEN)
-    dp = updater.dispatcher
-
+    from telegram.ext import ApplicationBuilder # নতুন লাইব্রেরি যোগ
+    
+    # নতুন এবং আধুনিক পদ্ধতি ব্যবহার করে বট শুরু করা
+    application = ApplicationBuilder().token(BOT_TOKEN).build()
+    
     # কমান্ড যুক্ত করা
-    dp.add_handler(CommandHandler("start", start))
-    dp.add_handler(CommandHandler("ff_group", ff_group))
+    application.add_handler(CommandHandler("start", start))
+    application.add_handler(CommandHandler("ff_group", ff_group))
 
     # বট চালানো
-    updater.start_polling()
-    updater.idle()
-
+    application.run_polling()
+    # application.idle() # idle() ফাংশনটি নতুন পদ্ধতিতে প্রয়োজন নেই
+    
 if __name__ == '__main__':
     main()
